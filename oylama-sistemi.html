@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mekatronik Sergisi — Proje Oylaması</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d0f;
+    --surface: #16161a;
+    --surface2: #1e1e24;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.15);
+    --text: #f0ede8;
+    --muted: #7a7884;
+    --accent: #e8c547;
+    --accent2: #c9a82a;
+    --danger: #e05252;
+    --success: #52c97a;
+    --font-head: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem 1rem 4rem;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .header-badge {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    padding: 4px 12px;
+    margin-bottom: 14px;
+  }
+  .header h1 {
+    font-family: var(--font-head);
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .header p {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  /* ── PROJECT NAME ── */
+  .proj-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .proj-name {
+    font-family: var(--font-head);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .proj-team {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── STARS ── */
+  .stars-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .stars {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.75rem;
+  }
+  .star {
+    font-size: 2.2rem;
+    cursor: pointer;
+    color: #2e2c36;
+    transition: color 0.15s, transform 0.12s;
+    background: none;
+    border: none;
+    line-height: 1;
+    padding: 0;
+  }
+  .star:hover, .star.active { color: var(--accent); }
+  .star:hover { transform: scale(1.15); }
+
+  /* ── SUBMIT BTN ── */
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    color: #0d0d0f;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-head);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.02em;
+  }
+  .btn-submit:hover { background: var(--accent2); }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled {
+    background: var(--surface2);
+    color: var(--muted);
+    cursor: not-allowed;
+    border: 1px solid var(--border);
+  }
+
+  /* ── BANNERS ── */
+  .banner {
+    width: 100%;
+    max-width: 480px;
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+    font-size: 14px;
+    display: none;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 1rem;
+    animation: fadeUp 0.4s ease both;
+  }
+  .banner.show { display: flex; }
+  .banner-warn {
+    background: rgba(224,82,82,0.12);
+    border: 1px solid rgba(224,82,82,0.3);
+    color: #f08080;
+  }
+  .banner-ok {
+    background: rgba(82,201,122,0.1);
+    border: 1px solid rgba(82,201,122,0.3);
+    color: #6ee89a;
+  }
+  .banner-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .banner-text strong { display: block; margin-bottom: 2px; }
+  .banner-text small { font-size: 12px; opacity: 0.75; }
+
+  /* ── ALREADY VOTED ── */
+  #voted-overlay {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+  #voted-overlay .big-icon { font-size: 3rem; margin-bottom: 1rem; }
+  #voted-overlay h2 { font-family: var(--font-head); font-size: 1.3rem; font-weight: 600; margin-bottom: 8px; }
+  #voted-overlay p { font-size: 13px; color: var(--muted); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%;
+    max-width: 480px;
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* ── ADMIN LINK ── */
+  .admin-link {
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: var(--font-mono);
+  }
+  .admin-link:hover { color: var(--text); }
+
+  /* ── ADMIN PANEL ── */
+  #admin-panel { display: none; width: 100%; max-width: 640px; }
+
+  .admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  .admin-title {
+    font-family: var(--font-head);
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+  .admin-badge {
+    font-size: 11px;
+    background: rgba(232,197,71,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(232,197,71,0.3);
+    border-radius: 4px;
+    padding: 3px 10px;
+  }
+
+  .results-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .results-table th {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .results-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .results-table tr:last-child td { border-bottom: none; }
+  .results-table tr:hover td { background: var(--surface2); }
+
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .rank-1 { background: rgba(232,197,71,0.2); color: var(--accent); }
+  .rank-2 { background: rgba(180,180,200,0.15); color: #b4b4c8; }
+  .rank-3 { background: rgba(180,120,60,0.15); color: #c8946a; }
+  .rank-other { background: var(--surface2); color: var(--muted); }
+
+  .bar-wrap { background: var(--surface2); border-radius: 3px; height: 6px; width: 120px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.8s ease; }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+  .stat-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  .stat-card .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .stat-card .value { font-family: var(--font-head); font-size: 1.6rem; font-weight: 700; }
+
+  .btn-logout {
+    background: none;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+  /* ── LOGIN ── */
+  #login-box { width: 100%; max-width: 340px; }
+  .input-field {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 12px;
+  }
+  .input-field:focus { border-color: var(--accent); }
+  .login-error { font-size: 12px; color: var(--danger); margin-bottom: 10px; display: none; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── NO PROJECT ── */
+  #no-project { display: none; text-align: center; padding: 2rem; }
+  #no-project h2 { font-family: var(--font-head); font-size: 1.2rem; margin-bottom: 8px; }
+  #no-project p { font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════
+     HEADER
+═══════════════════════════════ -->
+<div class="header" id="main-header">
+  <div class="header-badge">🔧 Mekatronik Mühendisliği</div>
+  <h1>Proje Sergisi<br>Oylaması</h1>
+  <p>Her ziyaretçi yalnızca bir projeye oy verebilir.</p>
+</div>
+
+<!-- ═══════════════════════════════
+     ALREADY VOTED BANNER
+═══════════════════════════════ -->
+<div class="banner banner-warn" id="banner-already-voted">
+  <span class="banner-icon">⚠️</span>
+  <div class="banner-text">
+    <strong>Zaten oy kullandınız</strong>
+    <small id="voted-proj-info">Başka bir projeye oy verdiniz. Teşekkür ederiz!</small>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     SUCCESS BANNER
+═══════════════════════════════ -->
+<div class="banner banner-ok" id="banner-success">
+  <span class="banner-icon">✅</span>
+  <div class="banner-text">
+    <strong>Oyunuz alındı!</strong>
+    <small>Katıldığınız için teşekkür ederiz.</small>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     VOTING CARD
+═══════════════════════════════ -->
+<div class="card" id="voting-card">
+
+  <!-- Voted overlay (same project) -->
+  <div id="voted-overlay">
+    <div class="big-icon">✅</div>
+    <h2>Oyunuz kaydedildi!</h2>
+    <p>Bu projeye daha önce oy verdiniz.<br>Teşekkür ederiz!</p>
+  </div>
+
+  <!-- Voting form -->
+  <div id="voting-form">
+    <div class="proj-label">Proje</div>
+    <div class="proj-name" id="proj-name">Yükleniyor...</div>
+    <div class="proj-team" id="proj-team">— &nbsp;</div>
+
+    <div class="stars-label">Projeyi puanlayın (1 – 5 yıldız)</div>
+    <div class="stars" id="stars-container" role="group" aria-label="Yıldız puanlama">
+      <button class="star" data-val="1" onclick="selectStar(1)" aria-label="1 yıldız">★</button>
+      <button class="star" data-val="2" onclick="selectStar(2)" aria-label="2 yıldız">★</button>
+      <button class="star" data-val="3" onclick="selectStar(3)" aria-label="3 yıldız">★</button>
+      <button class="star" data-val="4" onclick="selectStar(4)" aria-label="4 yıldız">★</button>
+      <button class="star" data-val="5" onclick="selectStar(5)" aria-label="5 yıldız">★</button>
+    </div>
+
+    <button class="btn-submit" id="btn-submit" disabled onclick="submitVote()">
+      Oyu Gönder
+    </button>
+  </div>
+
+  <!-- No project -->
+  <div id="no-project">
+    <h2>Proje bulunamadı</h2>
+    <p>Bu QR kod geçerli bir projeye ait değil.<br>Lütfen doğru QR kodu okutunuz.</p>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════
+     ADMIN SECTION
+═══════════════════════════════ -->
+<hr class="divider">
+<button class="admin-link" onclick="showAdminSection()">Hoca Paneli →</button>
+
+<!-- Login box -->
+<div id="login-box" style="display:none; margin-top:1.5rem;">
+  <div class="card">
+    <div class="proj-label" style="margin-bottom:16px;">Yetkili Girişi</div>
+    <input class="input-field" type="password" id="pw-input" placeholder="Şifrenizi girin" onkeydown="if(event.key==='Enter') doLogin()">
+    <div class="login-error" id="login-error">Şifre yanlış.</div>
+    <button class="btn-submit" onclick="doLogin()">Giriş Yap</button>
+  </div>
+</div>
+
+<!-- Admin panel -->
+<div id="admin-panel">
+  <div class="admin-header">
+    <div>
+      <div class="admin-title">Sonuçlar</div>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <span class="admin-badge">YETKİLİ</span>
+      <button class="btn-logout" onclick="logout()">Çıkış</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stat-row" id="stat-row">
+    <div class="stat-card">
+      <div class="label">Toplam Oy</div>
+      <div class="value" id="stat-total">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">En Yüksek</div>
+      <div class="value" id="stat-top">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Ort. Puan</div>
+      <div class="value" id="stat-avg">—</div>
+    </div>
+  </div>
+
+  <!-- Results table -->
+  <div class="card" style="padding: 0; overflow:hidden;">
+    <table class="results-table" id="results-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Proje Adı</th>
+          <th>Oy</th>
+          <th>Ort.</th>
+          <th>Dağılım</th>
+        </tr>
+      </thead>
+      <tbody id="results-body"></tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:1rem; font-size:12px; color:var(--muted); text-align:right;">
+    Son güncelleme: <span id="last-update">—</span> &nbsp;·&nbsp;
+    <button class="admin-link" onclick="renderAdmin()">Yenile</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// YAPILANDIRMA — buradan projeleri ve şifreyi değiştirin
+// ══════════════════════════════════════════════════
+const ADMIN_PASSWORD = "hoca2024"; // ← Şifreyi buradan değiştirin
+
+const PROJECTS = {
+  "p01": { name: "Akıllı Sera Robotu",        team: "Grup 1 — Mekatronik" },
+  "p02": { name: "Güneş Takip Sistemi",        team: "Grup 2 — Elektrik" },
+  "p03": { name: "Drone Kurtarma Sistemi",     team: "Grup 3 — Mekatronik" },
+  "p04": { name: "Otomatik Sulama Aracı",      team: "Grup 4 — Bilgisayar" },
+  "p05": { name: "Engelli Yardım Kolu",        team: "Grup 5 — Mekatronik" },
+  "p06": { name: "Akıllı Park Sistemi",        team: "Grup 6 — Elektrik" },
+  "p07": { name: "Yangın Söndürme Robotu",     team: "Grup 7 — Mekatronik" },
+  "p08": { name: "Ses Kontrollü Araç",         team: "Grup 8 — Elektronik" },
+  "p09": { name: "Su Altı Keşif Aracı",        team: "Grup 9 — Mekatronik" },
+  "p10": { name: "Deprem Erken Uyarı Sistemi", team: "Grup 10 — Bilgisayar" },
+  "p11": { name: "Akıllı Trafik Işığı",        team: "Grup 11 — Elektrik" },
+  "p12": { name: "Kol Protezi Kontrolü",       team: "Grup 12 — Mekatronik" },
+  "p13": { name: "Hava Kalitesi İzleyici",     team: "Grup 13 — Çevre" },
+  "p14": { name: "Otonom Çizgi İzleme",        team: "Grup 14 — Mekatronik" },
+  "p15": { name: "Akıllı Ev Kontrol Merkezi",  team: "Grup 15 — Elektronik" },
+  "p16": { name: "Güvenlik Gözetleme Robotu",  team: "Grup 16 — Mekatronik" },
+  "p17": { name: "Balık Çiftliği Otomasyonu",  team: "Grup 17 — Tarım" },
+  "p18": { name: "Mini CNC Makinesi",          team: "Grup 18 — Mekatronik" },
+  "p19": { name: "Rüzgar Türbini Tasarımı",    team: "Grup 19 — Enerji" },
+  "p20": { name: "Yüz Tanıma Kapı Kilidi",     team: "Grup 20 — Bilgisayar" },
+};
+
+// ══════════════════════════════════════════════════
+// STORAGE HELPERs
+// ══════════════════════════════════════════════════
+function getVotedProject() {
+  return localStorage.getItem("mek_voted_project");
+}
+function saveVote(projectId, stars) {
+  // Mark voter
+  localStorage.setItem("mek_voted_project", projectId);
+
+  // Save vote to results store
+  const key = "mek_votes_" + projectId;
+  const existing = JSON.parse(localStorage.getItem(key) || '{"total":0,"count":0}');
+  existing.total += stars;
+  existing.count += 1;
+  localStorage.setItem(key, JSON.stringify(existing));
+}
+function getResults() {
+  return Object.keys(PROJECTS).map(id => {
+    const raw = JSON.parse(localStorage.getItem("mek_votes_" + id) || '{"total":0,"count":0}');
+    return {
+      id,
+      name: PROJECTS[id].name,
+      team: PROJECTS[id].team,
+      count: raw.count,
+      avg: raw.count > 0 ? (raw.total / raw.count) : 0
+    };
+  });
+}
+
+// ══════════════════════════════════════════════════
+// URL PARAM → get ?p=p01
+// ══════════════════════════════════════════════════
+function getProjectId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("p");
+}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+let selectedStars = 0;
+let currentProjectId = null;
+
+window.addEventListener("DOMContentLoaded", () => {
+  const pid = getProjectId();
+  const votedPid = getVotedProject();
+
+  if (!pid) {
+    // No project in URL — show instruction
+    document.getElementById("proj-name").textContent = "QR kodu okutunuz";
+    document.getElementById("proj-team").textContent = "Proje bilgisi URL'den alınır";
+    document.getElementById("btn-submit").disabled = true;
+    return;
+  }
+
+  currentProjectId = pid;
+  const project = PROJECTS[pid];
+
+  if (!project) {
+    // Unknown project
+    document.getElementById("voting-form").style.display = "none";
+    document.getElementById("no-project").style.display = "block";
+    return;
+  }
+
+  // Fill project info
+  document.getElementById("proj-name").textContent = project.name;
+  document.getElementById("proj-team").textContent = project.team;
+
+  if (votedPid) {
+    if (votedPid === pid) {
+      // Already voted this exact project
+      document.getElementById("voting-form").style.display = "none";
+      document.getElementById("voted-overlay").style.display = "flex";
+      document.getElementById("voted-overlay").style.flexDirection = "column";
+    } else {
+      // Voted a DIFFERENT project — block
+      const votedName = PROJECTS[votedPid] ? PROJECTS[votedPid].name : "başka bir proje";
+      document.getElementById("voted-proj-info").textContent =
+        '"' + votedName + '" projesine oy verdınız. Her ziyaretçi tek bir projeye oy verebilir.';
+      document.getElementById("banner-already-voted").classList.add("show");
+
+      // Disable stars and button
+      document.querySelectorAll(".star").forEach(s => s.style.cursor = "not-allowed");
+      document.getElementById("btn-submit").disabled = true;
+      document.getElementById("btn-submit").textContent = "Zaten oy kullandınız";
+    }
+  }
+});
+
+// ══════════════════════════════════════════════════
+// STAR SELECTION
+// ══════════════════════════════════════════════════
+function selectStar(n) {
+  if (getVotedProject()) return; // block if already voted
+  selectedStars = n;
+  document.querySelectorAll(".star").forEach(btn => {
+    btn.classList.toggle("active", parseInt(btn.dataset.val) <= n);
+  });
+  document.getElementById("btn-submit").disabled = false;
+}
+
+// ══════════════════════════════════════════════════
+// SUBMIT
+// ══════════════════════════════════════════════════
+function submitVote() {
+  if (!selectedStars || !currentProjectId) return;
+  if (getVotedProject()) return;
+
+  saveVote(currentProjectId, selectedStars);
+
+  // Hide form, show success
+  document.getElementById("voting-form").style.display = "none";
+  document.getElementById("voted-overlay").style.display = "flex";
+  document.getElementById("voted-overlay").style.flexDirection = "column";
+  document.getElementById("banner-success").classList.add("show");
+}
+
+// ══════════════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════════════
+let adminLoggedIn = false;
+
+function showAdminSection() {
+  if (adminLoggedIn) {
+    renderAdmin();
+    return;
+  }
+  document.getElementById("login-box").style.display = "block";
+  document.getElementById("pw-input").focus();
+}
+
+function doLogin() {
+  const val = document.getElementById("pw-input").value;
+  if (val === ADMIN_PASSWORD) {
+    adminLoggedIn = true;
+    document.getElementById("login-box").style.display = "none";
+    document.getElementById("admin-panel").style.display = "block";
+    renderAdmin();
+  } else {
+    document.getElementById("login-error").style.display = "block";
+    document.getElementById("pw-input").value = "";
+    document.getElementById("pw-input").focus();
+  }
+}
+
+function logout() {
+  adminLoggedIn = false;
+  document.getElementById("admin-panel").style.display = "none";
+}
+
+function renderAdmin() {
+  const results = getResults().sort((a, b) => b.avg - a.avg || b.count - a.count);
+  const totalVotes = results.reduce((s, r) => s + r.count, 0);
+  const topAvg = results[0]?.avg || 0;
+  const overallAvg = totalVotes > 0
+    ? results.reduce((s,r) => s + r.avg * r.count, 0) / totalVotes
+    : 0;
+
+  document.getElementById("stat-total").textContent = totalVotes;
+  document.getElementById("stat-top").textContent = topAvg > 0 ? topAvg.toFixed(1) + " ★" : "—";
+  document.getElementById("stat-avg").textContent = overallAvg > 0 ? overallAvg.toFixed(1) : "—";
+  document.getElementById("last-update").textContent = new Date().toLocaleTimeString("tr-TR");
+
+  const maxAvg = topAvg || 1;
+  const tbody = document.getElementById("results-body");
+  tbody.innerHTML = results.map((r, i) => {
+    const rankClass = i === 0 ? "rank-1" : i === 1 ? "rank-2" : i === 2 ? "rank-3" : "rank-other";
+    const barW = r.count > 0 ? Math.round((r.avg / maxAvg) * 100) : 0;
+    return `<tr>
+      <td><span class="rank-badge ${rankClass}">${i+1}</span></td>
+      <td>
+        <div style="font-weight:500; font-size:13px;">${r.name}</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:2px;">${r.team}</div>
+      </td>
+      <td style="color:var(--muted);">${r.count}</td>
+      <td style="font-weight:500;">${r.count > 0 ? r.avg.toFixed(2) + " ★" : "—"}</td>
+      <td>
+        <div class="bar-wrap"><div class="bar-fill" style="width:${barW}%"></div></div>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+// ══════════════════════════════════════════════════
+// QR LINK GENERATOR (sadece bilgi amaçlı — konsolda)
+// URL formatı: index.html?p=p01
+// ══════════════════════════════════════════════════
+</script>
+</body>
+</html>
