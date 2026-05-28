@@ -7,341 +7,89 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #0d0d0f;
-    --surface: #16161a;
-    --surface2: #1e1e24;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.15);
-    --text: #f0ede8;
-    --muted: #7a7884;
-    --accent: #e8c547;
-    --accent2: #c9a82a;
-    --danger: #e05252;
-    --success: #52c97a;
+    --bg: #0d0d0f; --surface: #16161a; --surface2: #1e1e24;
+    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.15);
+    --text: #f0ede8; --muted: #7a7884;
+    --accent: #e8c547; --accent2: #c9a82a;
+    --danger: #e05252; --success: #52c97a;
     --font-head: 'Syne', sans-serif;
     --font-mono: 'DM Mono', monospace;
   }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-mono);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 2rem 1rem 4rem;
-  }
-
-  /* ── HEADER ── */
-  .header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-    animation: fadeUp 0.6s ease both;
-  }
-  .header-badge {
-    display: inline-block;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    border-radius: 2px;
-    padding: 4px 12px;
-    margin-bottom: 14px;
-  }
-  .header h1 {
-    font-family: var(--font-head);
-    font-size: clamp(1.6rem, 5vw, 2.4rem);
-    font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-  }
-  .header p {
-    margin-top: 8px;
-    font-size: 13px;
-    color: var(--muted);
-  }
-
-  /* ── CARD ── */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 2rem;
-    width: 100%;
-    max-width: 480px;
-    animation: fadeUp 0.5s ease both;
-  }
-
-  /* ── PROJECT NAME ── */
-  .proj-label {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-  .proj-name {
-    font-family: var(--font-head);
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-  .proj-team {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 1.75rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  /* ── STARS ── */
-  .stars-label {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-  .stars {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 1.75rem;
-  }
-  .star {
-    font-size: 2.2rem;
-    cursor: pointer;
-    color: #2e2c36;
-    transition: color 0.15s, transform 0.12s;
-    background: none;
-    border: none;
-    line-height: 1;
-    padding: 0;
-  }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-mono); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 2rem 1rem 4rem; }
+  .header { text-align: center; margin-bottom: 2.5rem; animation: fadeUp 0.6s ease both; }
+  .header-badge { display: inline-block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent); border-radius: 2px; padding: 4px 12px; margin-bottom: 14px; }
+  .header h1 { font-family: var(--font-head); font-size: clamp(1.6rem,5vw,2.4rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; }
+  .header p { margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; width: 100%; max-width: 480px; animation: fadeUp 0.5s ease both; }
+  .proj-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .proj-name { font-family: var(--font-head); font-size: 1.5rem; font-weight: 600; margin-bottom: 6px; }
+  .proj-team { font-size: 12px; color: var(--muted); margin-bottom: 1.75rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .stars-label { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .stars { display: flex; gap: 10px; margin-bottom: 1.75rem; }
+  .star { font-size: 2.2rem; cursor: pointer; color: #2e2c36; transition: color 0.15s, transform 0.12s; background: none; border: none; line-height: 1; padding: 0; }
   .star:hover, .star.active { color: var(--accent); }
   .star:hover { transform: scale(1.15); }
-
-  /* ── SUBMIT BTN ── */
-  .btn-submit {
-    width: 100%;
-    padding: 14px;
-    background: var(--accent);
-    color: #0d0d0f;
-    border: none;
-    border-radius: 8px;
-    font-family: var(--font-head);
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    letter-spacing: 0.02em;
-  }
+  .btn-submit { width: 100%; padding: 14px; background: var(--accent); color: #0d0d0f; border: none; border-radius: 8px; font-family: var(--font-head); font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s, transform 0.1s; }
   .btn-submit:hover { background: var(--accent2); }
   .btn-submit:active { transform: scale(0.98); }
-  .btn-submit:disabled {
-    background: var(--surface2);
-    color: var(--muted);
-    cursor: not-allowed;
-    border: 1px solid var(--border);
-  }
-
-  /* ── BANNERS ── */
-  .banner {
-    width: 100%;
-    max-width: 480px;
-    border-radius: 10px;
-    padding: 1.1rem 1.25rem;
-    font-size: 14px;
-    display: none;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 1rem;
-    animation: fadeUp 0.4s ease both;
-  }
+  .btn-submit:disabled { background: var(--surface2); color: var(--muted); cursor: not-allowed; border: 1px solid var(--border); }
+  .banner { width: 100%; max-width: 480px; border-radius: 10px; padding: 1.1rem 1.25rem; font-size: 14px; display: none; align-items: flex-start; gap: 12px; margin-bottom: 1rem; animation: fadeUp 0.4s ease both; }
   .banner.show { display: flex; }
-  .banner-warn {
-    background: rgba(224,82,82,0.12);
-    border: 1px solid rgba(224,82,82,0.3);
-    color: #f08080;
-  }
-  .banner-ok {
-    background: rgba(82,201,122,0.1);
-    border: 1px solid rgba(82,201,122,0.3);
-    color: #6ee89a;
-  }
-  .banner-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .banner-warn { background: rgba(224,82,82,0.12); border: 1px solid rgba(224,82,82,0.3); color: #f08080; }
+  .banner-ok { background: rgba(82,201,122,0.1); border: 1px solid rgba(82,201,122,0.3); color: #6ee89a; }
+  .banner-icon { font-size: 20px; flex-shrink: 0; }
   .banner-text strong { display: block; margin-bottom: 2px; }
   .banner-text small { font-size: 12px; opacity: 0.75; }
-
-  /* ── ALREADY VOTED ── */
-  #voted-overlay {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 2rem 1rem;
-  }
+  #voted-overlay { display: none; flex-direction: column; align-items: center; text-align: center; padding: 2rem 1rem; }
   #voted-overlay .big-icon { font-size: 3rem; margin-bottom: 1rem; }
   #voted-overlay h2 { font-family: var(--font-head); font-size: 1.3rem; font-weight: 600; margin-bottom: 8px; }
   #voted-overlay p { font-size: 13px; color: var(--muted); }
-
-  /* ── DIVIDER ── */
-  .divider {
-    width: 100%;
-    max-width: 480px;
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 2.5rem 0;
-  }
-
-  /* ── ADMIN LINK ── */
-  .admin-link {
-    font-size: 12px;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.2s;
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-family: var(--font-mono);
-  }
+  .divider { width: 100%; max-width: 480px; border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+  .admin-link { font-size: 12px; color: var(--muted); cursor: pointer; background: none; border: none; font-family: var(--font-mono); transition: color 0.2s; }
   .admin-link:hover { color: var(--text); }
-
-  /* ── ADMIN PANEL ── */
-  #admin-panel { display: none; width: 100%; max-width: 640px; }
-
-  .admin-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-  }
-  .admin-title {
-    font-family: var(--font-head);
-    font-size: 1.2rem;
-    font-weight: 700;
-  }
-  .admin-badge {
-    font-size: 11px;
-    background: rgba(232,197,71,0.15);
-    color: var(--accent);
-    border: 1px solid rgba(232,197,71,0.3);
-    border-radius: 4px;
-    padding: 3px 10px;
-  }
-
-  .results-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .results-table th {
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-align: left;
-    padding: 8px 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .results-table td {
-    padding: 12px;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-  }
+  #admin-panel { display: none; width: 100%; max-width: 680px; }
+  .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+  .admin-title { font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; }
+  .admin-badge { font-size: 11px; background: rgba(232,197,71,0.15); color: var(--accent); border: 1px solid rgba(232,197,71,0.3); border-radius: 4px; padding: 3px 10px; }
+  .results-table { width: 100%; border-collapse: collapse; }
+  .results-table th { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .results-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
   .results-table tr:last-child td { border-bottom: none; }
   .results-table tr:hover td { background: var(--surface2); }
-
-  .rank-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 500;
-  }
+  .rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 4px; font-size: 12px; font-weight: 500; }
   .rank-1 { background: rgba(232,197,71,0.2); color: var(--accent); }
   .rank-2 { background: rgba(180,180,200,0.15); color: #b4b4c8; }
   .rank-3 { background: rgba(180,120,60,0.15); color: #c8946a; }
   .rank-other { background: var(--surface2); color: var(--muted); }
-
-  .bar-wrap { background: var(--surface2); border-radius: 3px; height: 6px; width: 120px; overflow: hidden; }
+  .bar-wrap { background: var(--surface2); border-radius: 3px; height: 6px; width: 80px; overflow: hidden; }
   .bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.8s ease; }
-
-  .stat-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 1.5rem;
-  }
-  .stat-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1rem;
-  }
+  .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 1.5rem; }
+  .stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
   .stat-card .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
   .stat-card .value { font-family: var(--font-head); font-size: 1.6rem; font-weight: 700; }
-
-  .btn-logout {
-    background: none;
-    border: 1px solid var(--border2);
-    color: var(--muted);
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
+  .btn-logout { background: none; border: 1px solid var(--border2); color: var(--muted); padding: 6px 14px; border-radius: 6px; font-family: var(--font-mono); font-size: 12px; cursor: pointer; transition: all 0.2s; }
   .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
-
-  /* ── LOGIN ── */
   #login-box { width: 100%; max-width: 340px; }
-  .input-field {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: 8px;
-    padding: 12px 14px;
-    font-family: var(--font-mono);
-    font-size: 14px;
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s;
-    margin-bottom: 12px;
-  }
+  .input-field { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; padding: 12px 14px; font-family: var(--font-mono); font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s; margin-bottom: 12px; }
   .input-field:focus { border-color: var(--accent); }
   .login-error { font-size: 12px; color: var(--danger); margin-bottom: 10px; display: none; }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── NO PROJECT ── */
-  #no-project { display: none; text-align: center; padding: 2rem; }
-  #no-project h2 { font-family: var(--font-head); font-size: 1.2rem; margin-bottom: 8px; }
-  #no-project p { font-size: 13px; color: var(--muted); }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
 </style>
 </head>
 <body>
 
-<div class="header" id="main-header">
-  <div class="header-badge">🔧 Mekatronik </div>
+<div class="header">
+  <div class="header-badge">🔧 Mekatronik</div>
   <h1>Proje Sergisi<br>Oylaması</h1>
-  <p>Her ziyaretçi yalnızca bir projeye oy verebilir.</p>
+  <p>Her projeye bir kez oy verebilirsiniz.</p>
 </div>
 
 <div class="banner banner-warn" id="banner-already-voted">
   <span class="banner-icon">⚠️</span>
   <div class="banner-text">
     <strong>Zaten oy kullandınız</strong>
-    <small id="voted-proj-info">Başka bir projeye oy verdiniz. Teşekkür ederiz!</small>
+    <small id="voted-proj-info">Bu projeye daha önce oy verdiniz.</small>
   </div>
 </div>
 
@@ -354,37 +102,25 @@
 </div>
 
 <div class="card" id="voting-card">
-
   <div id="voted-overlay">
     <div class="big-icon">✅</div>
     <h2>Oyunuz kaydedildi!</h2>
-    <p>Bu projeye daha önce oy verdiniz.<br>Teşekkür ederiz!</p>
+    <p>Bu projeye zaten oy verdiniz.<br>Teşekkür ederiz!</p>
   </div>
-
   <div id="voting-form">
     <div class="proj-label">Proje</div>
     <div class="proj-name" id="proj-name">Yükleniyor...</div>
-    <div class="proj-team" id="proj-team">— &nbsp;</div>
-
+    <div class="proj-team" id="proj-team">—</div>
     <div class="stars-label">Projeyi puanlayın (1 – 5 yıldız)</div>
-    <div class="stars" id="stars-container">
+    <div class="stars">
       <button type="button" class="star" data-val="1" onclick="selectStar(1)">★</button>
       <button type="button" class="star" data-val="2" onclick="selectStar(2)">★</button>
       <button type="button" class="star" data-val="3" onclick="selectStar(3)">★</button>
       <button type="button" class="star" data-val="4" onclick="selectStar(4)">★</button>
       <button type="button" class="star" data-val="5" onclick="selectStar(5)">★</button>
     </div>
-
-    <button type="button" class="btn-submit" id="btn-submit" onclick="submitVote()">
-      Oyu Gönder
-    </button>
+    <button type="button" class="btn-submit" id="btn-submit" disabled onclick="submitVote()">Oyu Gönder</button>
   </div>
-
-  <div id="no-project">
-    <h2>Proje bulunamadı</h2>
-    <p>Bu QR kod geçerli bir projeye ait değil.<br>Lütfen doğru QR kodu okutunuz.</p>
-  </div>
-
 </div>
 
 <hr class="divider">
@@ -401,58 +137,43 @@
 
 <div id="admin-panel">
   <div class="admin-header">
-    <div>
-      <div class="admin-title">Sonuçlar</div>
-    </div>
+    <div class="admin-title">Sonuçlar</div>
     <div style="display:flex; gap:10px; align-items:center;">
       <span class="admin-badge">YETKİLİ</span>
       <button class="btn-logout" onclick="logout()">Çıkış</button>
     </div>
   </div>
-
-  <div class="stat-row" id="stat-row">
-    <div class="stat-card">
-      <div class="label">Toplam Oy</div>
-      <div class="value" id="stat-total">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="label">En Yüksek</div>
-      <div class="value" id="stat-top">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="label">Ort. Puan</div>
-      <div class="value" id="stat-avg">—</div>
-    </div>
+  <div class="stat-row">
+    <div class="stat-card"><div class="label">Toplam Oy</div><div class="value" id="stat-total">0</div></div>
+    <div class="stat-card"><div class="label">En Yüksek Ort.</div><div class="value" id="stat-top">—</div></div>
+    <div class="stat-card"><div class="label">Genel Ort.</div><div class="value" id="stat-avg">—</div></div>
   </div>
-
-  <div class="card" style="padding: 0; overflow:hidden;">
-    <table class="results-table" id="results-table">
+  <div class="card" style="padding:0; overflow:hidden;">
+    <table class="results-table">
       <thead>
         <tr>
           <th>#</th>
           <th>Proje Adı</th>
-          <th>Oy</th>
-          <th>Ort.</th>
+          <th>Kişi</th>
+          <th>Toplam Puan</th>
+          <th>Ortalama</th>
           <th>Dağılım</th>
         </tr>
       </thead>
       <tbody id="results-body"></tbody>
     </table>
   </div>
-
   <div style="margin-top:1rem; font-size:12px; color:var(--muted); text-align:right;">
     Son güncelleme: <span id="last-update">—</span> &nbsp;·&nbsp;
-    <button class="admin-link" onclick="renderAdmin()">Yenile</button>
+    <button class="admin-link" onclick="renderAdmin()">↺ Yenile</button>
   </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-
 <script>
 const ADMIN_PASSWORD = "salihbey";
 
-// Avrupa (europe-west1) Sunucusu Tanımlı Doğru Config
 const firebaseConfig = {
   apiKey: "AIzaSyDQCxf-JEvFZT5qkQCq4CgYTc0pBmhUjbI",
   authDomain: "okulsosyal-180ac.firebaseapp.com",
@@ -463,17 +184,12 @@ const firebaseConfig = {
   appId: "1:677900331961:web:23d6eb7a6e446b73dfa468"
 };
 
-// Bağlantıyı başlatıyoruz
-try {
-  firebase.initializeApp(firebaseConfig);
-  var db = firebase.database();
-} catch(e) {
-  alert("Firebase kütüphanesi başlatılamadı: " + e.message);
-}
+firebase.initializeApp(firebaseConfig);
+var db = firebase.database();
 
 const PROJECTS = {
   "p01": { name: "Akıllı Sera Robotu",         team: "Grup 1 — Mekatronik" },
-  "p02": { name: "Güneş Takip Sistemi",        team: "Grup 2 — Elektrik" },
+  "p02": { name: "Güneş Takip Sistemi",         team: "Grup 2 — Elektrik" },
   "p03": { name: "Drone Kurtarma Sistemi",      team: "Grup 3 — Mekatronik" },
   "p04": { name: "Otomatik Sulama Aracı",       team: "Grup 4 — Bilgisayar" },
   "p05": { name: "Engelli Yardım Kolu",         team: "Grup 5 — Mekatronik" },
@@ -498,20 +214,20 @@ let selectedStars = 0;
 let currentProjectId = null;
 let adminLoggedIn = false;
 
-// TEST SÜRESİNCE CİHAZ KİLİDİNİ DEVRE DIŞI BIRAKTIK (HER DENEMEDE OY GİDEBİLSİN)
 function hasVotedForProject(pid) {
-  return false; 
+  return localStorage.getItem("mek_voted_" + pid) === "true";
+}
+function markVoted(pid) {
+  localStorage.setItem("mek_voted_" + pid, "true");
 }
 
 window.addEventListener("DOMContentLoaded", () => {
   const pid = new URLSearchParams(window.location.search).get("p");
-
   if (!pid) {
     document.getElementById("proj-name").textContent = "QR kodu okutunuz";
-    document.getElementById("proj-team").textContent = "Lütfen linkin sonuna ?p=p01 ekleyerek test edin.";
+    document.getElementById("proj-team").textContent = "Her masa için ayrı QR kod bulunmaktadır";
     return;
   }
-
   currentProjectId = pid;
   const proj = PROJECTS[pid];
   if (!proj) {
@@ -519,21 +235,22 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("proj-team").textContent = "Lütfen doğru QR kodu okutunuz";
     return;
   }
-
   document.getElementById("proj-name").textContent = proj.name;
   document.getElementById("proj-team").textContent = proj.team;
+  if (hasVotedForProject(pid)) {
+    document.getElementById("voting-form").style.display = "none";
+    document.getElementById("voted-overlay").style.display = "flex";
+    document.getElementById("banner-already-voted").classList.add("show");
+  }
 });
 
 function selectStar(n) {
+  if (hasVotedForProject(currentProjectId)) return;
   selectedStars = parseInt(n);
   document.querySelectorAll(".star").forEach(btn => {
-    const btnVal = parseInt(btn.getAttribute("data-val"));
-    if (btnVal <= selectedStars) {
-      btn.classList.add("active");
-    } else {
-      btn.classList.remove("active");
-    }
+    btn.classList.toggle("active", parseInt(btn.getAttribute("data-val")) <= selectedStars);
   });
+  document.getElementById("btn-submit").disabled = false;
 }
 
 function submitVote() {
@@ -541,21 +258,28 @@ function submitVote() {
     alert("Lütfen önce bir yıldız seçin!");
     return;
   }
-
-  // Firebase'e veri kaydetme denemesi ve anlık hata yakalama mekanizması
+  if (hasVotedForProject(currentProjectId)) {
+    document.getElementById("voting-form").style.display = "none";
+    document.getElementById("voted-overlay").style.display = "flex";
+    return;
+  }
+  const btn = document.getElementById("btn-submit");
+  btn.disabled = true;
+  btn.textContent = "Gönderiliyor...";
   db.ref("votes/" + currentProjectId).push({
     stars: selectedStars,
     timestamp: firebase.database.ServerValue.TIMESTAMP
   })
   .then(() => {
-    // BAŞARILI
+    markVoted(currentProjectId);
     document.getElementById("voting-form").style.display = "none";
     document.getElementById("voted-overlay").style.display = "flex";
     document.getElementById("banner-success").classList.add("show");
   })
   .catch((error) => {
-    // BAĞLANTI VEYA KURAL HATASI VARSA DOĞRUDAN EKRANA BASACAK
-    alert("Firebase Veriyi Reddetti!\nHata: " + error.message);
+    btn.disabled = false;
+    btn.textContent = "Oyu Gönder";
+    alert("Hata: " + error.message);
   });
 }
 
@@ -584,57 +308,52 @@ function logout() {
 
 function renderAdmin() {
   if (!adminLoggedIn) return;
-
   db.ref("votes").once("value", (snapshot) => {
     const allVotes = snapshot.val() || {};
-    
     const res = Object.keys(PROJECTS).map(id => {
       const projVotes = allVotes[id] || {};
-      const voteIds = Object.keys(projVotes);
-      
-      let totalStars = 0;
-      let count = voteIds.length;
-
-      voteIds.forEach(vId => {
-        totalStars += projVotes[vId].stars || 0;
-      });
-
+      const voteList = Object.values(projVotes);
+      const count = voteList.length;
+      const totalStars = voteList.reduce((s, v) => s + (v.stars || 0), 0);
       return {
         id,
         name: PROJECTS[id].name,
         team: PROJECTS[id].team,
-        count: count,
+        count,
+        totalStars,
         avg: count > 0 ? totalStars / count : 0
       };
     });
 
-    res.sort((a,b) => b.avg - a.avg || b.count - a.count);
-    const total = res.reduce((s,r) => s + r.count, 0);
-    const topAvg = res[0]?.avg || 0;
-    const overall = total > 0 ? res.reduce((s,r) => s + r.avg * r.count, 0) / total : 0;
+    res.sort((a, b) => b.avg - a.avg || b.count - a.count);
 
-    document.getElementById("stat-total").textContent = total;
-    document.getElementById("stat-top").textContent   = topAvg > 0 ? topAvg.toFixed(1) + " ★" : "—";
-    document.getElementById("stat-avg").textContent   = overall > 0 ? overall.toFixed(1) : "—";
+    const totalVotes = res.reduce((s, r) => s + r.count, 0);
+    const topAvg = res[0]?.avg || 0;
+    const overall = totalVotes > 0
+      ? res.reduce((s, r) => s + r.avg * r.count, 0) / totalVotes
+      : 0;
+
+    document.getElementById("stat-total").textContent = totalVotes;
+    document.getElementById("stat-top").textContent = topAvg > 0 ? topAvg.toFixed(1) + " ★" : "—";
+    document.getElementById("stat-avg").textContent = overall > 0 ? overall.toFixed(1) : "—";
+    document.getElementById("last-update").textContent = new Date().toLocaleTimeString("tr-TR");
 
     const maxAvg = topAvg || 1;
-    document.getElementById("results-body").innerHTML = res.map((r,i) => {
+    document.getElementById("results-body").innerHTML = res.map((r, i) => {
       const rc = ["rank-1","rank-2","rank-3"][i] || "rank-other";
-      const bar = r.count > 0 ? Math.round((r.avg/maxAvg)*100) : 0;
+      const bar = r.count > 0 ? Math.round((r.avg / maxAvg) * 100) : 0;
       return `<tr>
-        <td><span class="rank-badge ${rc}">${i+1}</span></td>
+        <td><span class="rank-badge ${rc}">${i + 1}</span></td>
         <td>
           <div style="font-weight:500">${r.name}</div>
           <div style="font-size:11px;color:var(--muted);margin-top:2px">${r.team}</div>
         </td>
-        <td style="color:var(--muted)">${r.count}</td>
-        <td><strong>${r.count > 0 ? r.avg.toFixed(2)+" ★" : "—"}</strong></td>
+        <td style="color:var(--muted)">${r.count} kişi</td>
+        <td style="color:var(--muted)">${r.totalStars} puan</td>
+        <td><strong>${r.count > 0 ? r.avg.toFixed(2) + " ★" : "—"}</strong></td>
         <td><div class="bar-wrap"><div class="bar-fill" style="width:${bar}%"></div></div></td>
       </tr>`;
     }).join("");
-
-    const simdi = new Date();
-    document.getElementById("last-update").textContent = simdi.toLocaleTimeString('tr-TR');
   });
 }
 </script>
