@@ -331,18 +331,12 @@
 </head>
 <body>
 
-<!-- ═══════════════════════════════
-     HEADER
-═══════════════════════════════ -->
 <div class="header" id="main-header">
   <div class="header-badge">🔧 Mekatronik </div>
   <h1>Proje Sergisi<br>Oylaması</h1>
   <p>Her ziyaretçi yalnızca bir projeye oy verebilir.</p>
 </div>
 
-<!-- ═══════════════════════════════
-     ALREADY VOTED BANNER
-═══════════════════════════════ -->
 <div class="banner banner-warn" id="banner-already-voted">
   <span class="banner-icon">⚠️</span>
   <div class="banner-text">
@@ -351,9 +345,6 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════
-     SUCCESS BANNER
-═══════════════════════════════ -->
 <div class="banner banner-ok" id="banner-success">
   <span class="banner-icon">✅</span>
   <div class="banner-text">
@@ -362,39 +353,33 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════
-     VOTING CARD
-═══════════════════════════════ -->
 <div class="card" id="voting-card">
 
-  <!-- Voted overlay (same project) -->
   <div id="voted-overlay">
     <div class="big-icon">✅</div>
     <h2>Oyunuz kaydedildi!</h2>
     <p>Bu projeye daha önce oy verdiniz.<br>Teşekkür ederiz!</p>
   </div>
 
-  <!-- Voting form -->
   <div id="voting-form">
     <div class="proj-label">Proje</div>
     <div class="proj-name" id="proj-name">Yükleniyor...</div>
     <div class="proj-team" id="proj-team">— &nbsp;</div>
 
     <div class="stars-label">Projeyi puanlayın (1 – 5 yıldız)</div>
-    <div class="stars" id="stars-container" role="group" aria-label="Yıldız puanlama">
-      <button class="star" data-val="1" onclick="selectStar(1)" aria-label="1 yıldız">★</button>
-      <button class="star" data-val="2" onclick="selectStar(2)" aria-label="2 yıldız">★</button>
-      <button class="star" data-val="3" onclick="selectStar(3)" aria-label="3 yıldız">★</button>
-      <button class="star" data-val="4" onclick="selectStar(4)" aria-label="4 yıldız">★</button>
-      <button class="star" data-val="5" onclick="selectStar(5)" aria-label="5 yıldız">★</button>
+    <div class="stars" id="stars-container">
+      <button type="button" class="star" data-val="1" onclick="selectStar(1)">★</button>
+      <button type="button" class="star" data-val="2" onclick="selectStar(2)">★</button>
+      <button type="button" class="star" data-val="3" onclick="selectStar(3)">★</button>
+      <button type="button" class="star" data-val="4" onclick="selectStar(4)">★</button>
+      <button type="button" class="star" data-val="5" onclick="selectStar(5)">★</button>
     </div>
 
-    <button class="btn-submit" id="btn-submit" disabled onclick="submitVote()">
+    <button type="button" class="btn-submit" id="btn-submit" onclick="submitVote()">
       Oyu Gönder
     </button>
   </div>
 
-  <!-- No project -->
   <div id="no-project">
     <h2>Proje bulunamadı</h2>
     <p>Bu QR kod geçerli bir projeye ait değil.<br>Lütfen doğru QR kodu okutunuz.</p>
@@ -402,13 +387,9 @@
 
 </div>
 
-<!-- ═══════════════════════════════
-     ADMIN SECTION
-═══════════════════════════════ -->
 <hr class="divider">
 <button class="admin-link" onclick="showAdminSection()">admin user →</button>
 
-<!-- Login box -->
 <div id="login-box" style="display:none; margin-top:1.5rem;">
   <div class="card">
     <div class="proj-label" style="margin-bottom:16px;">Yetkili Girişi</div>
@@ -418,7 +399,6 @@
   </div>
 </div>
 
-<!-- Admin panel -->
 <div id="admin-panel">
   <div class="admin-header">
     <div>
@@ -430,7 +410,6 @@
     </div>
   </div>
 
-  <!-- Stats -->
   <div class="stat-row" id="stat-row">
     <div class="stat-card">
       <div class="label">Toplam Oy</div>
@@ -446,7 +425,6 @@
     </div>
   </div>
 
-  <!-- Results table -->
   <div class="card" style="padding: 0; overflow:hidden;">
     <table class="results-table" id="results-table">
       <thead>
@@ -468,171 +446,127 @@
   </div>
 </div>
 
-<script>
-// ══════════════════════════════════════════════════
-// YAPILANDIRMA — buradan projeleri ve şifreyi değiştirin
-// ══════════════════════════════════════════════════
-const ADMIN_PASSWORD = "salihbey"; // ← Şifreyi buradan değiştirin
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
-const PROJECTS = {
-  "p01": { name: "Akıllı Sera Robotu",        team: "Grup 1 — Mekatronik" },
-  "p02": { name: "Güneş Takip Sistemi",        team: "Grup 2 — Elektrik" },
-  "p03": { name: "Drone Kurtarma Sistemi",     team: "Grup 3 — Mekatronik" },
-  "p04": { name: "Otomatik Sulama Aracı",      team: "Grup 4 — Bilgisayar" },
-  "p05": { name: "Engelli Yardım Kolu",        team: "Grup 5 — Mekatronik" },
-  "p06": { name: "Akıllı Park Sistemi",        team: "Grup 6 — Elektrik" },
-  "p07": { name: "Yangın Söndürme Robotu",     team: "Grup 7 — Mekatronik" },
-  "p08": { name: "Ses Kontrollü Araç",         team: "Grup 8 — Elektronik" },
-  "p09": { name: "Su Altı Keşif Aracı",        team: "Grup 9 — Mekatronik" },
-  "p10": { name: "Deprem Erken Uyarı Sistemi", team: "Grup 10 — Bilgisayar" },
-  "p11": { name: "Akıllı Trafik Işığı",        team: "Grup 11 — Elektrik" },
-  "p12": { name: "Kol Protezi Kontrolü",       team: "Grup 12 — Mekatronik" },
-  "p13": { name: "Hava Kalitesi İzleyici",     team: "Grup 13 — Çevre" },
-  "p14": { name: "Otonom Çizgi İzleme",        team: "Grup 14 — Mekatronik" },
-  "p15": { name: "Akıllı Ev Kontrol Merkezi",  team: "Grup 15 — Elektronik" },
-  "p16": { name: "Güvenlik Gözetleme Robotu",  team: "Grup 16 — Mekatronik" },
-  "p17": { name: "Balık Çiftliği Otomasyonu",  team: "Grup 17 — Tarım" },
-  "p18": { name: "Mini CNC Makinesi",          team: "Grup 18 — Mekatronik" },
-  "p19": { name: "Rüzgar Türbini Tasarımı",    team: "Grup 19 — Enerji" },
-  "p20": { name: "Yüz Tanıma Kapı Kilidi",     team: "Grup 20 — Bilgisayar" },
+<script>
+const ADMIN_PASSWORD = "salihbey";
+
+// Avrupa (europe-west1) Sunucusu Tanımlı Doğru Config
+const firebaseConfig = {
+  apiKey: "AIzaSyDQCxf-JEvFZT5qkQCq4CgYTc0pBmhUjbI",
+  authDomain: "okulsosyal-180ac.firebaseapp.com",
+  databaseURL: "https://okulsosyal-180ac-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "okulsosyal-180ac",
+  storageBucket: "okulsosyal-180ac.firebasestorage.app",
+  messagingSenderId: "677900331961",
+  appId: "1:677900331961:web:23d6eb7a6e446b73dfa468"
 };
 
-// ══════════════════════════════════════════════════
-// STORAGE HELPERs
-// ══════════════════════════════════════════════════
-function getVotedProject() {
-  return localStorage.getItem("mek_voted_project");
-}
-function saveVote(projectId, stars) {
-  // Mark voter
-  localStorage.setItem("mek_voted_project", projectId);
-
-  // Save vote to results store
-  const key = "mek_votes_" + projectId;
-  const existing = JSON.parse(localStorage.getItem(key) || '{"total":0,"count":0}');
-  existing.total += stars;
-  existing.count += 1;
-  localStorage.setItem(key, JSON.stringify(existing));
-}
-function getResults() {
-  return Object.keys(PROJECTS).map(id => {
-    const raw = JSON.parse(localStorage.getItem("mek_votes_" + id) || '{"total":0,"count":0}');
-    return {
-      id,
-      name: PROJECTS[id].name,
-      team: PROJECTS[id].team,
-      count: raw.count,
-      avg: raw.count > 0 ? (raw.total / raw.count) : 0
-    };
-  });
+// Bağlantıyı başlatıyoruz
+try {
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.database();
+} catch(e) {
+  alert("Firebase kütüphanesi başlatılamadı: " + e.message);
 }
 
-// ══════════════════════════════════════════════════
-// URL PARAM → get ?p=p01
-// ══════════════════════════════════════════════════
-function getProjectId() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("p");
-}
+const PROJECTS = {
+  "p01": { name: "Akıllı Sera Robotu",         team: "Grup 1 — Mekatronik" },
+  "p02": { name: "Güneş Takip Sistemi",        team: "Grup 2 — Elektrik" },
+  "p03": { name: "Drone Kurtarma Sistemi",      team: "Grup 3 — Mekatronik" },
+  "p04": { name: "Otomatik Sulama Aracı",       team: "Grup 4 — Bilgisayar" },
+  "p05": { name: "Engelli Yardım Kolu",         team: "Grup 5 — Mekatronik" },
+  "p06": { name: "Akıllı Park Sistemi",         team: "Grup 6 — Elektrik" },
+  "p07": { name: "Yangın Söndürme Robotu",      team: "Grup 7 — Mekatronik" },
+  "p08": { name: "Ses Kontrollü Araç",          team: "Grup 8 — Elektronik" },
+  "p09": { name: "Su Altı Keşif Aracı",         team: "Grup 9 — Mekatronik" },
+  "p10": { name: "Deprem Erken Uyarı Sistemi",  team: "Grup 10 — Bilgisayar" },
+  "p11": { name: "Akıllı Trafik Işığı",         team: "Grup 11 — Elektrik" },
+  "p12": { name: "Kol Protezi Kontrolü",        team: "Grup 12 — Mekatronik" },
+  "p13": { name: "Hava Kalitesi İzleyici",      team: "Grup 13 — Çevre" },
+  "p14": { name: "Otonom Çizgi İzleme",         team: "Grup 14 — Mekatronik" },
+  "p15": { name: "Akıllı Ev Kontrol Merkezi",   team: "Grup 15 — Elektronik" },
+  "p16": { name: "Güvenlik Gözetleme Robotu",   team: "Grup 16 — Mekatronik" },
+  "p17": { name: "Balık Çiftliği Otomasyonu",   team: "Grup 17 — Tarım" },
+  "p18": { name: "Mini CNC Makinesi",           team: "Grup 18 — Mekatronik" },
+  "p19": { name: "Rüzgar Türbini Tasarımı",     team: "Grup 19 — Enerji" },
+  "p20": { name: "Yüz Tanıma Kapı Kilidi",      team: "Grup 20 — Bilgisayar" },
+};
 
-// ══════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════
 let selectedStars = 0;
 let currentProjectId = null;
+let adminLoggedIn = false;
+
+// TEST SÜRESİNCE CİHAZ KİLİDİNİ DEVRE DIŞI BIRAKTIK (HER DENEMEDE OY GİDEBİLSİN)
+function hasVotedForProject(pid) {
+  return false; 
+}
 
 window.addEventListener("DOMContentLoaded", () => {
-  const pid = getProjectId();
-  const votedPid = getVotedProject();
+  const pid = new URLSearchParams(window.location.search).get("p");
 
   if (!pid) {
-    // No project in URL — show instruction
     document.getElementById("proj-name").textContent = "QR kodu okutunuz";
-    document.getElementById("proj-team").textContent = "Proje bilgisi URL'den alınır";
-    document.getElementById("btn-submit").disabled = true;
+    document.getElementById("proj-team").textContent = "Lütfen linkin sonuna ?p=p01 ekleyerek test edin.";
     return;
   }
 
   currentProjectId = pid;
-  const project = PROJECTS[pid];
-
-  if (!project) {
-    // Unknown project
-    document.getElementById("voting-form").style.display = "none";
-    document.getElementById("no-project").style.display = "block";
+  const proj = PROJECTS[pid];
+  if (!proj) {
+    document.getElementById("proj-name").textContent = "Geçersiz proje";
+    document.getElementById("proj-team").textContent = "Lütfen doğru QR kodu okutunuz";
     return;
   }
 
-  // Fill project info
-  document.getElementById("proj-name").textContent = project.name;
-  document.getElementById("proj-team").textContent = project.team;
-
-  if (votedPid) {
-    if (votedPid === pid) {
-      // Already voted this exact project
-      document.getElementById("voting-form").style.display = "none";
-      document.getElementById("voted-overlay").style.display = "flex";
-      document.getElementById("voted-overlay").style.flexDirection = "column";
-    } else {
-      // Voted a DIFFERENT project — block
-      const votedName = PROJECTS[votedPid] ? PROJECTS[votedPid].name : "başka bir proje";
-      document.getElementById("voted-proj-info").textContent =
-        '"' + votedName + '" projesine oy verdınız. Her ziyaretçi tek bir projeye oy verebilir.';
-      document.getElementById("banner-already-voted").classList.add("show");
-
-      // Disable stars and button
-      document.querySelectorAll(".star").forEach(s => s.style.cursor = "not-allowed");
-      document.getElementById("btn-submit").disabled = true;
-      document.getElementById("btn-submit").textContent = "Zaten oy kullandınız";
-    }
-  }
+  document.getElementById("proj-name").textContent = proj.name;
+  document.getElementById("proj-team").textContent = proj.team;
 });
 
-// ══════════════════════════════════════════════════
-// STAR SELECTION
-// ══════════════════════════════════════════════════
 function selectStar(n) {
-  if (getVotedProject()) return; // block if already voted
-  selectedStars = n;
+  selectedStars = parseInt(n);
   document.querySelectorAll(".star").forEach(btn => {
-    btn.classList.toggle("active", parseInt(btn.dataset.val) <= n);
+    const btnVal = parseInt(btn.getAttribute("data-val"));
+    if (btnVal <= selectedStars) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
   });
-  document.getElementById("btn-submit").disabled = false;
 }
 
-// ══════════════════════════════════════════════════
-// SUBMIT
-// ══════════════════════════════════════════════════
 function submitVote() {
-  if (!selectedStars || !currentProjectId) return;
-  if (getVotedProject()) return;
-
-  saveVote(currentProjectId, selectedStars);
-
-  // Hide form, show success
-  document.getElementById("voting-form").style.display = "none";
-  document.getElementById("voted-overlay").style.display = "flex";
-  document.getElementById("voted-overlay").style.flexDirection = "column";
-  document.getElementById("banner-success").classList.add("show");
-}
-
-// ══════════════════════════════════════════════════
-// ADMIN
-// ══════════════════════════════════════════════════
-let adminLoggedIn = false;
-
-function showAdminSection() {
-  if (adminLoggedIn) {
-    renderAdmin();
+  if (selectedStars === 0) {
+    alert("Lütfen önce bir yıldız seçin!");
     return;
   }
+
+  // Firebase'e veri kaydetme denemesi ve anlık hata yakalama mekanizması
+  db.ref("votes/" + currentProjectId).push({
+    stars: selectedStars,
+    timestamp: firebase.database.ServerValue.TIMESTAMP
+  })
+  .then(() => {
+    // BAŞARILI
+    document.getElementById("voting-form").style.display = "none";
+    document.getElementById("voted-overlay").style.display = "flex";
+    document.getElementById("banner-success").classList.add("show");
+  })
+  .catch((error) => {
+    // BAĞLANTI VEYA KURAL HATASI VARSA DOĞRUDAN EKRANA BASACAK
+    alert("Firebase Veriyi Reddetti!\nHata: " + error.message);
+  });
+}
+
+function showAdminSection() {
+  if (adminLoggedIn) { renderAdmin(); return; }
   document.getElementById("login-box").style.display = "block";
   document.getElementById("pw-input").focus();
 }
 
 function doLogin() {
-  const val = document.getElementById("pw-input").value;
-  if (val === ADMIN_PASSWORD) {
+  if (document.getElementById("pw-input").value === ADMIN_PASSWORD) {
     adminLoggedIn = true;
     document.getElementById("login-box").style.display = "none";
     document.getElementById("admin-panel").style.display = "block";
@@ -640,7 +574,6 @@ function doLogin() {
   } else {
     document.getElementById("login-error").style.display = "block";
     document.getElementById("pw-input").value = "";
-    document.getElementById("pw-input").focus();
   }
 }
 
@@ -650,42 +583,60 @@ function logout() {
 }
 
 function renderAdmin() {
-  const results = getResults().sort((a, b) => b.avg - a.avg || b.count - a.count);
-  const totalVotes = results.reduce((s, r) => s + r.count, 0);
-  const topAvg = results[0]?.avg || 0;
-  const overallAvg = totalVotes > 0
-    ? results.reduce((s,r) => s + r.avg * r.count, 0) / totalVotes
-    : 0;
+  if (!adminLoggedIn) return;
 
-  document.getElementById("stat-total").textContent = totalVotes;
-  document.getElementById("stat-top").textContent = topAvg > 0 ? topAvg.toFixed(1) + " ★" : "—";
-  document.getElementById("stat-avg").textContent = overallAvg > 0 ? overallAvg.toFixed(1) : "—";
-  document.getElementById("last-update").textContent = new Date().toLocaleTimeString("tr-TR");
+  db.ref("votes").once("value", (snapshot) => {
+    const allVotes = snapshot.val() || {};
+    
+    const res = Object.keys(PROJECTS).map(id => {
+      const projVotes = allVotes[id] || {};
+      const voteIds = Object.keys(projVotes);
+      
+      let totalStars = 0;
+      let count = voteIds.length;
 
-  const maxAvg = topAvg || 1;
-  const tbody = document.getElementById("results-body");
-  tbody.innerHTML = results.map((r, i) => {
-    const rankClass = i === 0 ? "rank-1" : i === 1 ? "rank-2" : i === 2 ? "rank-3" : "rank-other";
-    const barW = r.count > 0 ? Math.round((r.avg / maxAvg) * 100) : 0;
-    return `<tr>
-      <td><span class="rank-badge ${rankClass}">${i+1}</span></td>
-      <td>
-        <div style="font-weight:500; font-size:13px;">${r.name}</div>
-        <div style="font-size:11px; color:var(--muted); margin-top:2px;">${r.team}</div>
-      </td>
-      <td style="color:var(--muted);">${r.count}</td>
-      <td style="font-weight:500;">${r.count > 0 ? r.avg.toFixed(2) + " ★" : "—"}</td>
-      <td>
-        <div class="bar-wrap"><div class="bar-fill" style="width:${barW}%"></div></div>
-      </td>
-    </tr>`;
-  }).join("");
+      voteIds.forEach(vId => {
+        totalStars += projVotes[vId].stars || 0;
+      });
+
+      return {
+        id,
+        name: PROJECTS[id].name,
+        team: PROJECTS[id].team,
+        count: count,
+        avg: count > 0 ? totalStars / count : 0
+      };
+    });
+
+    res.sort((a,b) => b.avg - a.avg || b.count - a.count);
+    const total = res.reduce((s,r) => s + r.count, 0);
+    const topAvg = res[0]?.avg || 0;
+    const overall = total > 0 ? res.reduce((s,r) => s + r.avg * r.count, 0) / total : 0;
+
+    document.getElementById("stat-total").textContent = total;
+    document.getElementById("stat-top").textContent   = topAvg > 0 ? topAvg.toFixed(1) + " ★" : "—";
+    document.getElementById("stat-avg").textContent   = overall > 0 ? overall.toFixed(1) : "—";
+
+    const maxAvg = topAvg || 1;
+    document.getElementById("results-body").innerHTML = res.map((r,i) => {
+      const rc = ["rank-1","rank-2","rank-3"][i] || "rank-other";
+      const bar = r.count > 0 ? Math.round((r.avg/maxAvg)*100) : 0;
+      return `<tr>
+        <td><span class="rank-badge ${rc}">${i+1}</span></td>
+        <td>
+          <div style="font-weight:500">${r.name}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">${r.team}</div>
+        </td>
+        <td style="color:var(--muted)">${r.count}</td>
+        <td><strong>${r.count > 0 ? r.avg.toFixed(2)+" ★" : "—"}</strong></td>
+        <td><div class="bar-wrap"><div class="bar-fill" style="width:${bar}%"></div></div></td>
+      </tr>`;
+    }).join("");
+
+    const simdi = new Date();
+    document.getElementById("last-update").textContent = simdi.toLocaleTimeString('tr-TR');
+  });
 }
-
-// ══════════════════════════════════════════════════
-// QR LINK GENERATOR (sadece bilgi amaçlı — konsolda)
-// URL formatı: index.html?p=p01
-// ══════════════════════════════════════════════════
 </script>
 </body>
 </html>
